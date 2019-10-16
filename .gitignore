@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/site/bundle.js
 
 # dependencies
 package-lock.json

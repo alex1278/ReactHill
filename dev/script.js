@@ -8,11 +8,14 @@ import CommentsList from './components/CommentsList'
 export  default class App extends Component{
   render(){
     return(
-      <div>
-        <Title/>
-        <Form/>
-        <CommentsList/>
-      </div>
+      <>
+        {/*<Test author="жжет"/>*/}
+        <div className="box">
+          <Title/>
+          <Form/>
+          <CommentsList/>
+        </div>
+      </>
     )
   }
 }
@@ -20,5 +23,5 @@ export  default class App extends Component{
 
 ReactDOM.render(
   <App/>,
-  document.getElementsByClassName('box')[0]
+  document.getElementById('app')
 )
