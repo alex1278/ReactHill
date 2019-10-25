@@ -1,65 +1,78 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react';
 
-export default class Form extends Component{
+class Form extends Component {
+    constructor(props) {
+        super();
 
-  constructor(props) {
-    super()
-    this.state = {
-      name: props.author,
-      text: ''
+        this.state = {
+            name: props.item ? props.item.author : '',
+            text: props.item ? props.item.text : '',
+        }
+
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.clearForm = this.clearForm.bind(this);
+    }
+    handleChange(e) {
+        const { name, value } = e.target;
+
+        this.setState({
+            [name]: value,
+        });
     }
 
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    // this.inputName = React.createRef();
-    // this.inputText = React.createRef();
-  }
-  handleChange(e){
-    const {name, value} = e.target
-    this.setState({
-      [name]: value
-    })
-  }
+    handleSubmit(e) {
+        e.preventDefault();
 
-  handleSubmit(e) {
-    e.preventDefault();
-    // const data = {
-    //   name: this.inputName.current.value,
-    //   text: this.inputText.current.value
-    // }
-    const data = this.state
-    console.log('submit', data)
-    console.log(this.inputText)
-    console.log(this.inputText.current.value)
+        const { name, text } = this.state;
+        const { item } = this.props;
 
-}
+        const data = {
+            id: item ? item.id : Date.now(),
+            author: name,
+            text,
+        };
+
+        this.props.addFromProps(data);
+        this.clearForm();
+    }
+
+    clearForm() {
+        this.setState({
+            name: '',
+            text: '',
+        });
+    }
+
   render() {
-    const {name, text} = this.state
-    return(
+        const { name, text } = this.state;
+        const { type } = this.props;
+        return (
       <form
-        className="form"
-        onSubmit={this.handleSubmit}
-      >
-        <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          id="name"
-          onChange={this.handleChange}
-          ref={this.inputName}
-          defaultValue = {this.props.author}
-          value={name}
-        />
-        <label htmlFor="text">Comment</label>
-        <textarea
-          name="text"
-          id="text"
-          value={text}
-          onChange = {this.handleChange}
-          // ref={this.inputText}
-        >{text}</textarea>
+              className={`form ${type ? type : ''}`}
+              onSubmit={this.handleSubmit}
+            >
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={name}
+                  onChange={this.handleChange}
+                />
 
-        <button className="button">post</button>
-      </form>
-    )
+                <label htmlFor="text">Comment</label>
+                <textarea
+                  name="text"
+                  id="text"
+                  value={text}
+                  onChange={this.handleChange}
+                />
+
+                <button className="button">post</button>
+            </form>
+    );
   }
 }
+
+export default Form;

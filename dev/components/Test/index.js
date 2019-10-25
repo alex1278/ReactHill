@@ -1,48 +1,141 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react';
 
-class Test extends Component {
-  constructor() {
+class Inner extends Component {
+  constructor(props) {
     super();
+
     this.state = {
-      count: 0
+      value: props.count,
     };
-    this.increment = this.increment.bind(this)
-    this.decrement = this.decrement.bind(this)
-  }
-  increment() {
-    const { count} = this.state;
-    this.setState({
-      count: count+1
-    })
+
+    this.handleChange = this.handleChange.bind(this);
+
+    console.log('constructor');
   }
 
-  decrement() {
-    const {count} = this.state
-    this.setState({
-      count: count - 1
-    })
+  // componentWillMount() {
+  // 	console.log('componentWillMount');
+  // }
+
+  componentDidMount() {
+    console.log('componentDidMount');
+
+    // this.ololo = setInterval(this.timer, 1000);
   }
 
-  /* метод 2 в 1 */
-  changeNum(num){
-    const {count} = this.state
-    this.setState({
-      count: count+num
-    })
+  // timer() {
+  // 	console.log('ololo');
+  // }
+
+  // componentWillReceiveProps(nextProps) {
+  // 	console.log('componentWillReceiveProps');
+  // }
+
+  // componentWillUpdate(nextProps, nextState) {
+  // 	console.log('componentWillUpdate');
+  // }
+
+  static getDerivedStateFromProps(nextProps, state) {
+    console.log('getDerivedStateFromProps');
+    console.log('nextProps', nextProps);
+    if (nextProps.count > 2) {
+      return null;
+    }
+
+    if (nextProps.count !== state.value) {
+      return {
+        value: nextProps.count,
+      }
+    }
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log('componentDidUpdate');
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    console.log('shouldComponentUpdate');
+    return true;
+  }
+
+  componentWillUnmount() {
+    console.log('componentWillUnmount');
+    // clearInterval(this.ololo);
+  }
+
+  handleChange() {
+    const { value } = this.state;
+    this.setState({
+      value: value+1,
+    });
+  }
+
   render() {
-    const {count} = this.state;
+    console.log('render');
+    const { value } = this.state;
+    const { count } = this.props;
     return (
-      <div style={{
-        marin: '100px',
-        display: 'flex',
-        justifyContent: 'center'
-      }}>
-        <button onClick={()=> this.changeNum(1)}> + 1</button>
-        {count}
-        <button onClick={()=> this.changeNum(-1)}> - 1</button>
+      <div>
+        <button
+          onClick={this.handleChange}
+        >
+          {value} from state
+        </button>
+        <div>{count} from props</div>
       </div>
-    );
+    )
   }
 }
-export default Test;
+
+class Wrapper extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      handleShowInner: false,
+      count: 0,
+    };
+
+    this.handleInner = this.handleInner.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleInner() {
+    const { handleShowInner } = this.state;
+    this.setState({
+      handleShowInner: !handleShowInner,
+    });
+  }
+
+  handleChange() {
+    const { count } = this.state;
+    this.setState({
+      count: count+1,
+    });
+  }
+
+  render() {
+    const { count, handleShowInner } = this.state;
+    return (
+      <div>
+        <button
+          onClick={this.handleChange}
+        >
+          {count}
+        </button>
+        <button
+          onClick={this.handleInner}
+        >
+          handle inner
+        </button>
+        {
+          handleShowInner ? (
+            <Inner count={count} />
+          ) : null
+        }
+      </div>
+    )
+  }
+}
+
+export default Wrapper;
