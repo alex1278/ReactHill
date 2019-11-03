@@ -1,86 +1,60 @@
-import React, { PureComponent } from 'react';
+import React, {useState, useEffect} from 'react';
+
 import Form from '../Form';
+import Icon from '../Icon';
 
-class Item extends PureComponent {
-  constructor(props) {
-    super();
+const Item = ({
+    item = {
+      author: 'noname',
+      text: 'lorem ipsum'
+    },
+    removeFromList,
+    updateFromList,
+  }) => {
+  const [isShowForm, handleShowForm] = useState(false);
 
-    this.state = {
-      isShowForm: false,
-      item: props.item,
-    };
+  useEffect(() => {
+    console.log('или маунт компоненты или кто-то нажал редактировать');
+  }, [isShowForm]);
 
-    this.handleChange = this.handleChange.bind(this);
-  }
+  useEffect(() => {
+    handleShowForm(false);
+  }, [item]);
 
-  static getDerivedStateFromProps(props, state) {
-    const { author, text } = state.item;
-    if ((props.item.author !== author) || (props.item.text !== text)) {
-      return {
-        isShowForm: false,
+  return (
+    <li className="item">
+      {
+        isShowForm ? (
+          <Form
+            type="edit"
+            item={item}
+            addFromProps={updateFromList}
+          />
+        ) : (
+          <>
+            <header className="item__head">
+              <h3 className="item__title">{item.author}</h3>
+              <div className="item__action">
+                <button
+                  className="button button--small"
+                  onClick={() => handleShowForm(!isShowForm)}
+                >
+                  <Icon name="edit"/>
+                </button>
+                <button
+                  className="button button--small"
+                  onClick={() => removeFromList(item.id)}
+                >
+                  <Icon name="delete"/>
+                </button>
+              </div>
+            </header>
+            <p>{item.text}</p>
+          </>
+        )
       }
-    }
-    return null;
-  }
-
-  // componentWillReceiveProps(nextProps) {
-  // 	const { author, text } = this.props.item;
-  // 	if ((nextProps.item.author !== author) || (nextProps.item.text !== text)) {
-  // 		this.handleChange();
-  // 	}
-  // }
-
-  handleChange() {
-    const { isShowForm } = this.state;
-    this.setState({
-      isShowForm: !isShowForm,
-    });
-  }
-
-  render() {
-    const { item, removeFromList, updateFromList } = this.props;
-    const { isShowForm } = this.state;
-
-    return (
-      <li className="item">
-        {
-          isShowForm ? (
-            <Form
-              type="edit"
-              item={item}
-              addFromProps={updateFromList}
-            />
-          ) : (
-            <>
-              <header className="item__head">
-                    <h3 className="item__title">{item.author}</h3>
-                    <div className="item__action">
-                        <button
-                          className="button button--small"
-                          onClick={this.handleChange}
-                        >
-                          edit
-                        </button>
-                        <button
-                          className="button button--small"
-                          onClick={() => removeFromList(item.id)}
-                        >
-                          delete
-                        </button>
-                    </div>
-                </header>
-                <p>{item.text}</p>
-            </>
-          )
-        }
-      </li>
-    );
-  }
+    </li>
+  );
 }
-
-Item.defaultProps = {
-  author: 'noname',
-  text: 'lorem ipsum'
-};
 
 export default Item;

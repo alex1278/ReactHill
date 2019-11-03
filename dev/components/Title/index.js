@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 
-class Title extends Component {
-  render() {
-    return (
-      <h1 className="title">Comments</h1>
-    );
-  }
-} 
+import picture from './image.jpg';
+
+const Title = () => (
+	<div className="title">
+		<h1>Comments</h1>
+		<img
+		  style={{
+		  	maxWidth: '200px',
+		  }}
+		  src={picture}
+		  alt="Scarlett Johansson"
+		/>
+	</div>
+);
 
 export default Title;

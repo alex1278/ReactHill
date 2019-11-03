@@ -1,83 +1,60 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 import Title from '../Title';
 import Form from '../Form';
 import List from '../List';
 
-class Comments extends Component {
-  constructor() {
-    super();
+const DEFAULT_COMMENTS = [
+	{
+		id: 1,
+		author: 'Николай',
+		text: 'олололололололо',
+	},
+	{
+		id: 2,
+		author: 'Юрий',
+		text: 'Всем привет!',
+	},
+	{
+		id: 3,
+		author: 'Юрий1',
+		text: 'Всем привет2!',
+	},
+	{
+		id: 4,
+		author: 'test',
+		text: 'from app',
+	},
+];
 
-    this.state = {
-      listItem: [
-        {
-          id: 1,
-          author: 'Николай',
-          text: 'олололололололо',
-        },
-        {
-          id: 2,
-          author: 'Юрий',
-          text: 'Всем привет!',
-        },
-        {
-          id: 3,
-          author: 'Юрий1',
-          text: 'Всем привет2!',
-        },
-        {
-          id: 4,
-          author: 'test',
-          text: 'from app',
-        },
-      ],
-    };
+const Comments = () => {
+	const [listItem, changeList] = useState(DEFAULT_COMMENTS);
 
-    this.createItem = this.createItem.bind(this);
-    this.updateItem = this.updateItem.bind(this);
-    this.removeItem = this.removeItem.bind(this);
-  }
+	const createItem = (item) => {
+		changeList([item, ...listItem]);
+	};
 
-  createItem(item) {
-    const { listItem } = this.state;
-    this.setState({
-      listItem: [item, ...listItem],
-    });
-  }
+	const updateItem = (item) => {
+		changeList(listItem.map(elem => elem.id === item.id ? item : elem ));
+	};
 
-  updateItem(item) {
-    const { listItem } = this.state;
-    this.setState({
-      listItem: listItem.map(elem => (
-        elem.id === item.id ? item : elem
-      ))
-    });
-  }
+	const removeItem = (itemId) => {
+		changeList(listItem.filter(item => item.id !== itemId));
+	};
 
-  removeItem(itemId) {
-    const { listItem } = this.state;
-    this.setState({
-      listItem: listItem.filter(item => item.id !== itemId)
-    });
-  }
-
-  render() {
-    const { listItem } = this.state;
-
-    return (
-      <div className="box">
-        <Title />
-        <Form
-          addFromProps={this.createItem}
-        />
-        <List
-          data={listItem}
-          removeFromProps={this.removeItem}
-          updateFromProps={this.updateItem}
-        />
-      </div>
-    );
-  }
+	return (
+		<div className="box">
+			<Title />
+			<Form
+			  addFromProps={createItem}
+			/>
+			<List
+			  data={listItem}
+			  removeFromProps={removeItem}
+			  updateFromProps={updateItem}
+			/>
+		</div>
+	);
 }
 
 export default Comments;

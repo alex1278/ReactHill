@@ -11,7 +11,7 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'site'),
     host: 'localhost',
-    port:9090
+    // port:9090
 
   },
   module: {
@@ -25,6 +25,14 @@ module.exports = {
             presets: ['@babel/preset-env', '@babel/preset-react']
           }
         }
+      },
+      {
+        test: /\.(png|jpg|gif|webp)$/i,
+        exclude: /node_modules/,
+        loader: 'file-loader',
+        options: {
+          name: 'images/[name]-[hash].[ext]',
+        },
       }
     ]
   },
